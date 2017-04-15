@@ -3,8 +3,12 @@
 #include <stdlib.h>  // atoi, malloc, free, exit, NULL
 #include <stdbool.h> // bool
 
+#include <omp.h>     // parallel stuff
+
 #define DEBUG 0
 #define VERBOSE 0
+
+#define NUM_THREADS 4
 
 /*
  * Input should be a single number
@@ -29,6 +33,8 @@ int main(int argc, char *argv[])
     ///////////////////////////// END ARGS /////////////////////////////////////
 
     ///////////////////////////// INIT /////////////////////////////////////////
+
+    omp_set_num_threads(NUM_THREADS);
 
     bool* is_prime = malloc (sizeof(bool) * num);
 
@@ -64,12 +70,13 @@ int main(int argc, char *argv[])
         if( DEBUG )
             printf("loop itteration: %ld\n", jj);
 
-        for(long itr = 0, kk = jj*jj; kk < num; itr++, kk+=jj)
+        #pragma omp parallel for
+        for(long kk = jj*jj; kk < num; kk+=jj)
         {
             is_prime[kk] = false;
 
-            if( VERBOSE )
-                printf("%ld is not prime, because it is %ld * %ld \n", kk, jj, itr + jj);
+            // if( VERBOSE )
+            //     printf("%ld is not prime, because it is %ld * %ld \n", kk, jj, itr + jj);
         }
 
     }
