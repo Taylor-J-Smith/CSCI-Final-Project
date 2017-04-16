@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     ///////////////////////////// INIT /////////////////////////////////////////
 
-    bool* is_prime = malloc (sizeof(bool) * num);
+    bool* is_prime = malloc (sizeof(bool) * sqrt_num);
 
     if(is_prime == NULL)
     {
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 
     // SEIVE
 
-    for(long jj = 2; jj < sqrt_num; jj++)
+    for(long jj = 2; jj < sqrt(sqrt_num); jj++)
     {
         if( !is_prime[jj] )
             continue;
@@ -64,12 +64,9 @@ int main(int argc, char *argv[])
         if( DEBUG )
             printf("loop itteration: %ld\n", jj);
 
-        for(long itr = 0, kk = jj*jj; kk < num; itr++, kk+=jj)
+        for(long kk = jj*jj; kk < sqrt_num; kk+=jj)
         {
             is_prime[kk] = false;
-
-            if( VERBOSE )
-                printf("%ld is not prime, because it is %ld * %ld \n", kk, jj, itr + jj);
         }
 
     }
@@ -80,7 +77,7 @@ int main(int argc, char *argv[])
 
     long count = 0;
 
-    for(long pp = 0; pp < num; pp++)
+    for(long pp = 0; pp < sqrt_num; pp++)
     {
         if(is_prime[pp])
             count++;
