@@ -8,7 +8,7 @@
 #define DEBUG 0
 #define VERBOSE 0
 
-#define NUM_THREADS 4
+#define NUM_THREADS 8
 
 long num;
 double sqrt_num;
@@ -103,13 +103,29 @@ int main(int argc, char *argv[])
 
 void * prime_seive_multiple(void* args)
 {
-    int id = (int) args;
+    int id = (int) args + 1;
 
-    // printf("Thread %d\n", id);
+    int range = num - 1;
 
+    int excess = range % NUM_THREADS;
+    int num_itr = range / NUM_THREADS;
 
-    for(long jj = 2 + id; jj < sqrt_num; jj+= 4)
+    int start;
+
+    if( id > NUM_THREADS - excess )
+        start = 2 + ((NUM_THREADS - excess)*(num_itr)) + ((id-(NUM_THREADS-excess+1))*(num_itr+1));
+    else
+        start = 2 + ((id-1)*num_itr);
+
+    if( id > NUM_THREADS - excess)
+        num_itr++;
+
+    printf("Thread %d, starting at %d, runnning %d times[excess=%d]\n", id, start, num_itr, excess);
+
+    for(long ii = 0 ; ii < num_itr; ii++)
     {
+        long jj = start + ii;
+
         if( !is_prime[jj] )
             continue;
 
