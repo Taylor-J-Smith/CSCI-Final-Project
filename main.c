@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 
     long count = 0;
 
-    for(long pp = 0; pp < sqrt_num; pp++)
+    for(long pp = 0; pp < num; pp++)
     {
         if(is_prime[pp])
             count++;
