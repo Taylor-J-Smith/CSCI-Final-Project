@@ -1,6 +1,6 @@
 compiler = gcc
 args = -Wall -Wextra -std=c99
-libs = -lm
+libs = -lm -lpthread
 
 all: run
 
