@@ -62,21 +62,26 @@ int main(int argc, char *argv[])
 
     // SEIVE
 
-    for(long jj = 2; jj < sqrt_num; jj++)
+    #pragma omp parallel for ordered
+    for(long jj = 2; jj < (int) sqrt_num; jj++)
     {
-        if( !is_prime[jj] )
-            continue;
-
-        if( DEBUG )
-            printf("loop itteration: %ld\n", jj);
-
-        #pragma omp parallel for
-        for(long kk = jj*jj; kk < num; kk+=jj)
+        if( is_prime[jj] )
         {
-            is_prime[kk] = false;
+            if( DEBUG )
+                printf("loop itteration: %ld\n", jj);
 
-            // if( VERBOSE )
-            //     printf("%ld is not prime, because it is %ld * %ld \n", kk, jj, itr + jj);
+            long end = num - (jj*jj);
+            long loops = end / jj;
+
+            #pragma omp ordered
+            for(long kk = 0; kk < loops; kk++)
+            {
+                long mm = jj*jj + kk*jj;
+                is_prime[mm] = false;
+
+                // if( VERBOSE )
+                //     printf("%ld is not prime, because it is %ld * %ld \n", kk, jj, itr + jj);
+            }
         }
 
     }
